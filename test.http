@@ -1,0 +1,26 @@
+### Get all
+GET http://localhost:3000/test HTTP/1.1
+
+### Get single
+GET http://localhost:3000/test?_id=something HTTP/1.1
+
+### Add
+POST http://localhost:3000/test HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Tom",
+    "age": 30,
+    "gender": "male"
+}
+
+### Modify
+PUT http://localhost:3000/test?_id=something HTTP/1.1
+content-type: application/json
+
+{
+    "age": 20
+}
+
+### Delete
+DELETE http://localhost:3000/test?_id=something HTTP/1.1
