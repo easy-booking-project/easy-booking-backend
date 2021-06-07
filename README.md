@@ -1,73 +1,54 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+Built with [NestJS](https://nestjs.com/)
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# EasyBooking Backend
+EasyBooking backend project.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Getting Started
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+## Install Dependencies
+Install Node modules by the following command.
+```sh
+npm i
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+## Running a MongoDB Instance
+Run a MongoDB instance and put the connection string into _imports_ part of _src/app.module.ts_. For example, there is a MongoDB instance running at _locahost:27017_ without password, then you should config it like this.
+```ts
+@Module({
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost:27017'),
+  ],
+  // something else
+})
+export class AppModule {}
 ```
+You do not need to do anything else with the DB, the backend app would initialize it automatically.
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+### Starting MongoDB Instance Using Docker
+To make it simple, you can start a MongoDB instance using Docker by the command below. It gives you a empty MongoDB instance called _mongo_ with no password and a random port opened.
+```sh
+docker run --name mongo -P -d mongo
 ```
+You can check the randomly opened port number by running below command after starting the container.
+```sh
+docker ps
+```
+Note that this would create a MongoDB container without data persistence. If you want to persist the data, considering using ```-v``` flag for ```docker run```. 
 
-## Support
+### Running the Backend App
+To Run the app, use the following command, which the app would start and listen to port _3000_ on _localhost_.
+```sh
+npm run start
+```
+# Project Structure
+Except the _app module_, there are three main modules.
+## Controller
+This module would hold all the API endpoint handlers, which basically contains _controllers_ in NestJS concept. Any _controller_ here should only handle the API requests and should not contain bussiness logic. They can use services from Service and Repository modules.
+## Service
+This module would hold all the general services, such as business logic, which basically contains _services_ in NestJS concept. Any _service_ here should not contain API processing logic. They can use services from Repository module.
+## Repository
+This module would hold all the services about accessing database, which basically contains _services_ in NestJS concept. Any _service_ here should only provide database access and should not contain bussiness logic.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+# Contribution
+## Before Committing
+Before committing, please use ```npm run lint``` first.
