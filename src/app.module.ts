@@ -7,7 +7,7 @@ import { RepositoryModule } from './repository/repository.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://db'),
+    MongooseModule.forRoot('mongodb://db'), // TODO move the connection string to a config file
     ControllerModule,
     RepositoryModule
   ],
