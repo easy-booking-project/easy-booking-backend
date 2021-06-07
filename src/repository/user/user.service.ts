@@ -6,11 +6,7 @@ import { User } from './user.schema';
 
 @Injectable()
 export class UserService extends RepositoryBase<User> {
-
-    constructor(
-        @InjectModel(User.name) model: Model<User & Document>
-    ) {
-        super(model);
-    }
-
+  constructor(@InjectModel(User.name) model: Model<User & Document>) {
+    super(model);
+  }
 }

@@ -9,10 +9,10 @@ import { User, UserSchema } from './user/user.schema';
   imports: [
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
-      { name: Role.name, schema: RoleSchema }
-    ])
+      { name: Role.name, schema: RoleSchema },
+    ]),
   ],
   providers: [UserService, RoleService],
-  exports: [UserService, RoleService]
+  exports: [UserService, RoleService],
 })
-export class RepositoryModule { }
+export class RepositoryModule {}

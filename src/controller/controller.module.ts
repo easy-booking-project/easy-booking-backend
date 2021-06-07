@@ -5,6 +5,6 @@ import { RoleController } from './role/role.controller';
 
 @Module({
   imports: [RepositoryModule],
-  controllers: [UserController, RoleController]
+  controllers: [UserController, RoleController],
 })
-export class ControllerModule { }
+export class ControllerModule {}

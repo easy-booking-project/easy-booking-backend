@@ -6,11 +6,7 @@ import { Role } from './role.schema';
 
 @Injectable()
 export class RoleService extends RepositoryBase<Role> {
-
-    constructor(
-        @InjectModel(Role.name) model: Model<Role & Document>
-    ) {
-        super(model);
-    }
-
+  constructor(@InjectModel(Role.name) model: Model<Role & Document>) {
+    super(model);
+  }
 }

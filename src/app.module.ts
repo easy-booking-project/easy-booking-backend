@@ -8,12 +8,12 @@ import { ServicesModule } from './services/services.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://db'), // TODO move the connection string to a config file
+    MongooseModule.forRoot('mongodb://localhost:27017'), // TODO move the connection string to a config file
     ControllerModule,
     RepositoryModule,
-    ServicesModule
+    ServicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
