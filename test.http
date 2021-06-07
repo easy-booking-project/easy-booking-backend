@@ -1,26 +1,57 @@
-### Get all
-GET http://localhost:3000/test HTTP/1.1
+### === Role ===
 
-### Get single
-GET http://localhost:3000/test?_id=something HTTP/1.1
+### Get all role
+GET http://localhost:3000/role HTTP/1.1
 
-### Add
-POST http://localhost:3000/test HTTP/1.1
+### Get single role
+GET http://localhost:3000/role?_id=something HTTP/1.1
+
+### Add a role
+POST http://localhost:3000/role HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Tom",
-    "age": 30,
-    "gender": "male"
+    "name": "Test",
+    "description": "This is a test role."
 }
 
-### Modify
-PUT http://localhost:3000/test?_id=something HTTP/1.1
+### Modify a role
+PUT http://localhost:3000/role?_id=something HTTP/1.1
 content-type: application/json
 
 {
-    "age": 20
+    "name": "Test Renamed"
 }
 
-### Delete
-DELETE http://localhost:3000/test?_id=something HTTP/1.1
+### Delete a role
+DELETE http://localhost:3000/role?_id=something HTTP/1.1
+
+
+### === User ===
+
+### Get all user
+GET http://localhost:3000/user HTTP/1.1
+
+### Get single user
+GET http://localhost:3000/user?_id=something HTTP/1.1
+
+### Add a user
+POST http://localhost:3000/user HTTP/1.1
+content-type: application/json
+
+{
+    "username": "Test",
+    "authenticationHash": "something",
+    "roleId": "some id"
+}
+
+### Modify a user
+PUT http://localhost:3000/user?_id=something HTTP/1.1
+content-type: application/json
+
+{
+    "nickname": "Hello World"
+}
+
+### Delete a user
+DELETE http://localhost:3000/user?_id=something HTTP/1.1
