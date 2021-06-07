@@ -1,4 +1,4 @@
-import { FilterQuery, Model } from 'mongoose';
+import { FilterQuery } from 'mongoose';
 import { Document } from 'mongoose';
 
 export abstract class RepositoryBase<T> {
