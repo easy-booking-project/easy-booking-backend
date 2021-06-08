@@ -6,14 +6,17 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { User } from 'src/repository/user/user.schema';
-import { UserService } from 'src/repository/user/user.service';
+import { User } from '../../repository/user/user.schema';
+import { UserService } from '../../repository/user/user.service';
+import { JwtAuthGuard } from '../../service/auth/jwt-auth.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async obtain(@Query('_id') _id: string) {
     return await this.userService.find(_id ? { _id } : {});

@@ -8,7 +8,7 @@ import { ServiceModule } from './service/service.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://db'), // TODO move the connection string to a config file
+    MongooseModule.forRoot('mongodb://localhost:55003'), // TODO move the connection string to a config file
     ControllerModule,
     RepositoryModule,
     ServiceModule,
