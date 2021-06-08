@@ -7,8 +7,8 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { Role } from 'src/repository/role/role.schema';
-import { RoleService } from 'src/repository/role/role.service';
+import { Role } from '@repository/role/role.schema';
+import { RoleService } from '@repository/role/role.service';
 
 @Controller('role')
 export class RoleController {

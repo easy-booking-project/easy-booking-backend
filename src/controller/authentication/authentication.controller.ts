@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Query } from '@nestjs/common';
-import { User } from 'src/repository/user/user.schema';
+import { User } from '@repository/user/user.schema';
 
 @Controller('authentication')
 export class AuthenticationController {
