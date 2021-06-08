@@ -1,8 +1,8 @@
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, Model } from 'mongoose';
 import { Document } from 'mongoose';
 
 export abstract class RepositoryBase<T> {
-  constructor(private readonly model) {}
+  constructor(private readonly model: Model<T & Document>) {}
 
   async find(filter: FilterQuery<T & Document>) {
     return this.model.find(filter).exec();
