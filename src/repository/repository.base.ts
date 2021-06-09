@@ -2,10 +2,14 @@ import { FilterQuery, Model } from 'mongoose';
 import { Document } from 'mongoose';
 
 export abstract class RepositoryBase<T> {
-  constructor(private readonly model: Model<T & Document>) {}
+  constructor(protected readonly model: Model<T & Document>) {}
 
   async find(filter: FilterQuery<T & Document>) {
     return this.model.find(filter).exec();
+  }
+
+  async findOne(filter: FilterQuery<T & Document>) {
+    return this.model.findOne(filter).exec();
   }
 
   async insert(entity: Partial<T>) {
