@@ -9,4 +9,8 @@ export class UserService extends RepositoryBase<User> {
   constructor(@InjectModel(User.name) model: Model<User & Document>) {
     super(model);
   }
+
+  public async findOneByUserName(username: string): Promise<User> {
+    return this.model.findOne({ username: username });
+  }
 }

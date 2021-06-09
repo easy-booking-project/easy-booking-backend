@@ -19,7 +19,7 @@ export class RoleController {
     return await this.roleService.find(_id ? { _id } : {});
   }
 
-  @Post()
+  @Post('create')
   async create(@Body() role: Partial<Role>) {
     return await this.roleService.insert(role);
   }
