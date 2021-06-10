@@ -1,7 +1,7 @@
 export const jwtConstants = {
   access_secret:
     '(DL$bS1IygCE@[-Sh.YAyulR{y[NUeyr<^>.f$,lYD}9wswLCGAFFEN+)g>2nA4',
-  access_expired_time: 90000, // 15 min
+  access_expired_time: 900, // 15 min
   refresh_secret:
     'W"])E&jZzH2u}ypxde)E]4p(34jL3^Lj<x)G2vz^J[qD/~BHm:Sx?3:]d^q.(Q7',
   refresh_expired_time: 28800 * 4, // 8 hour

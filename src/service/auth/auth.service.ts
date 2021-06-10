@@ -1,4 +1,3 @@
-import { HttpException, Injectable } from '@nestjs/common';
 import {
   HttpResponseError,
   HttpResponseMessage,
@@ -6,6 +5,8 @@ import {
   jwtConstants,
 } from './constant';
 
+import { HttpException, Injectable } from '@nestjs/common';
+import { differenceInSeconds } from 'date-fns';
 import { JwtService } from '@nestjs/jwt';
 import { RoleRepository } from '@repository/role/role.repository';
 import { User } from '../../repository/user/user.schema';
@@ -33,11 +34,19 @@ export class AuthService {
     };
   }
 
-  async generateJwtAccessToken(payload) {
+  private async generateJwtAccessToken(payload) {
     // TODO change this so payload only contain id, do async fetch in guard
     return await this.jwtService.sign(payload, {
       secret: jwtConstants.access_secret,
       expiresIn: jwtConstants.access_expired_time,
+    });
+  }
+
+  private async generateJwtRefreshToken(payload) {
+    // TODO change this so payload only contain id, do async fetch in guard
+    return await this.jwtService.sign(payload, {
+      secret: jwtConstants.refresh_secret,
+      expiresIn: jwtConstants.refresh_expired_time,
     });
   }
 
@@ -59,13 +68,19 @@ export class AuthService {
         }, []),
       });
 
+      const refresh_token = await this.generateJwtRefreshToken({
+        _id: payload.user.id,
+        roles: payload.roles,
+      });
+
       await this.userRepository.update(
         { _id: payload.user._id },
-        { token: access_token },
+        { token: refresh_token },
       );
 
       return {
         access_token,
+        refresh_token,
       };
     } else {
       throw new HttpException(
@@ -98,5 +113,24 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
+  }
+
+  async refreshToken(user) {
+    const timeDiff = differenceInSeconds(user.exp * 1000, new Date());
+    const refresh_refresh = timeDiff > 300;
+
+    return {
+      refresh_refresh,
+      refresh_token:
+        refresh_refresh &&
+        (await this.generateJwtRefreshToken({
+          _id: user.user.id,
+          roles: user.roles,
+        })),
+      access_token: await this.generateJwtAccessToken({
+        _id: user._id,
+        roles: user.roles,
+      }),
+    };
   }
 }

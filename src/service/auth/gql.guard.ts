@@ -15,7 +15,7 @@ import { HttpResponseError, HttpResponseMessage, Role } from './constant';
 import { User } from '@repository/user/user.schema';
 
 @Injectable()
-export class GqlAuthGuard extends AuthGuard('jwt') {
+export class GqlAuthGuard extends AuthGuard('gql') {
   getRequest(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
     return ctx.getContext().req;

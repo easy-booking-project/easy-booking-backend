@@ -9,7 +9,7 @@ import { IS_PUBLIC_KEY } from './public.decorator';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('jwt') {
+export class JwtAuthGuard extends AuthGuard('access') {
   constructor(private reflector: Reflector) {
     super();
   }
@@ -27,6 +27,20 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     return super.canActivate(context);
+  }
+
+  handleRequest(err, user, info) {
+    if (err || !user) {
+      throw err || new UnauthorizedException({ description: info });
+    }
+
+    return user;
+  }
+}
+
+export class JwtRefreshAuthGuard extends AuthGuard('refresh') {
+  constructor() {
+    super();
   }
 
   handleRequest(err, user, info) {
