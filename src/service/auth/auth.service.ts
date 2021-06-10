@@ -123,7 +123,7 @@ export class AuthService {
       refresh_token:
         refresh_refresh &&
         (await this.generateJwtRefreshToken({
-          _id: user.user.id,
+          _id: user._id,
           roles: user.roles,
         })),
       access_token: await this.generateJwtAccessToken({

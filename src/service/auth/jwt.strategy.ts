@@ -24,6 +24,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
   }
 }
 
+@Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   constructor(private userRepository: UserRepository) {
     super({
