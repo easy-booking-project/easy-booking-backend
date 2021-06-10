@@ -8,11 +8,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
-import { UserService } from '@repository/user/user.service';
+import { UserRepository } from '@repository/user/user.repository';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserRepository) {}
 
   @Get()
   async obtain(@Query('_id') _id: string) {
