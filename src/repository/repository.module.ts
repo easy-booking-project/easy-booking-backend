@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
-import { UserService } from './user/user.service';
-import { RoleService } from './role/role.service';
 import { Role, RoleSchema } from './role/role.schema';
 import { User, UserSchema } from './user/user.schema';
+
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { RoleRepository } from './role/role.repository';
+import { UserRepository } from './user/user.repository';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { User, UserSchema } from './user/user.schema';
       { name: Role.name, schema: RoleSchema },
     ]),
   ],
-  providers: [UserService, RoleService],
-  exports: [UserService, RoleService],
+  providers: [UserRepository, RoleRepository],
+  exports: [UserRepository, RoleRepository],
 })
 export class RepositoryModule {}

@@ -8,11 +8,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { Role } from '@repository/role/role.schema';
-import { RoleService } from '@repository/role/role.service';
+import { RoleRepository } from '@repository/role/role.repository';
 
 @Controller('role')
 export class RoleController {
-  constructor(private readonly roleService: RoleService) {}
+  constructor(private readonly roleService: RoleRepository) {}
 
   @Get()
   async obtain(@Query('_id') _id: string) {

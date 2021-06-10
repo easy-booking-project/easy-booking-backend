@@ -5,7 +5,7 @@ import { Document, Model } from 'mongoose';
 import { Role } from './role.schema';
 
 @Injectable()
-export class RoleService extends RepositoryBase<Role> {
+export class RoleRepository extends RepositoryBase<Role> {
   constructor(@InjectModel(Role.name) model: Model<Role & Document>) {
     super(model);
   }

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
-import { UserService } from '@repository/user/user.service';
+import { UserRepository } from '@repository/user/user.repository';
 import { Role } from '@service/auth/constant';
 import { JwtAuthGuard } from '@service/auth/jwt-auth.guard';
 import { Roles } from '@service/auth/roles.decorator';
@@ -18,7 +18,7 @@ import { RolesGuard } from '@service/auth/roles.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserRepository) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('fetch')
