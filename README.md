@@ -11,15 +11,6 @@ Install Node modules by the following command.
 npm i
 ```
 
-## Running a MongoDB Instance
-Run a MongoDB instance and put the connection string into _imports_ part of _src/app.module.ts_. For example, there is a MongoDB instance running at _locahost:27017_ without password, then you should config it like this.
-```ts
-@Module({
-  imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017'),
-  ],
-  // something else
-})
 export class AppModule {}
 ```
 You do not need to do anything else with the DB, the backend app would initialize it automatically.

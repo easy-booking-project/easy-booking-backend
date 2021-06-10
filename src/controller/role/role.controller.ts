@@ -14,22 +14,24 @@ import { RoleRepository } from '@repository/role/role.repository';
 export class RoleController {
   constructor(private readonly roleRepository: RoleRepository) {}
 
-  @Get()
+  @Get('/obtain')
   async obtain(@Query('_id') _id: string) {
     return await this.roleRepository.find(_id ? { _id } : {});
   }
 
-  @Post()
+  @Post('/create')
   async create(@Body() role: Partial<Role>) {
-    return await this.roleRepository.insert(role);
+    const a = await this.roleRepository.insert(role);
+    console.log(a);
+    return a;
   }
 
-  @Put()
+  @Put('/modify')
   async modify(@Query('_id') _id: string, @Body() role: Partial<Role>) {
     return this.roleRepository.update({ _id }, role);
   }
 
-  @Delete()
+  @Delete('/delete')
   async delete(@Query('_id') _id: string) {
     return this.roleRepository.remove({ _id });
   }
