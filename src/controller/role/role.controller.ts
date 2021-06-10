@@ -21,9 +21,7 @@ export class RoleController {
 
   @Post('/create')
   async create(@Body() role: Partial<Role>) {
-    const a = await this.roleRepository.insert(role);
-    console.log(a);
-    return a;
+    return await this.roleRepository.insert(role);
   }
 
   @Put('/modify')

@@ -1,12 +1,12 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ConfigModule } from '../config/config.module';
+import { ConfigService } from '../config/config.service';
 import { ControllerModule } from './controller/controller.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RepositoryModule } from './repository/repository.module';
 import { ServiceModule } from './service/service.module';
-import { ConfigService } from '../config/config.service';
-import { ConfigModule } from '../config/config.module';
 
 @Module({
   imports: [
@@ -18,8 +18,6 @@ import { ConfigModule } from '../config/config.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        console.log(process.env['DATA_CONNECTION_STRING']);
-        console.log(configService.dataBaseConnectionString);
         return {
           uri: configService.dataBaseConnectionString,
         };
