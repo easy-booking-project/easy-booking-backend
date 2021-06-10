@@ -18,29 +18,29 @@ import { RolesGuard } from '@service/auth/roles.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('fetch')
   @Roles(Role.Admin)
   async obtain(@Req() req) {
-    return await this.userService.find(
+    return await this.userRepository.find(
       req.user._id ? { _id: req.user._id } : {},
     );
   }
 
   @Post()
   async create(@Body() user: Partial<User>) {
-    return await this.userService.insert(user);
+    return await this.userRepository.insert(user);
   }
 
   @Put()
   async modify(@Query('_id') _id: string, @Body() user: Partial<User>) {
-    return this.userService.update({ _id }, user);
+    return this.userRepository.update({ _id }, user);
   }
 
   @Delete()
   async delete(@Query('_id') _id: string) {
-    return this.userService.remove({ _id });
+    return this.userRepository.remove({ _id });
   }
 }

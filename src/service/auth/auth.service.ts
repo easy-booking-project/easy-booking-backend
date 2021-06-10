@@ -5,24 +5,24 @@ import {
   HttpStatus,
   jwtConstants,
 } from './constant';
-import { JwtService } from '@nestjs/jwt';
 
+import { JwtService } from '@nestjs/jwt';
+import { RoleRepository } from '@repository/role/role.repository';
 import { User } from '../../repository/user/user.schema';
-import { UserService } from '../../repository/user/user.service';
-import { RoleService } from '../../repository/role/role.service';
+import { UserRepository } from '@repository/user/user.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private roleService: RoleService,
+    private userRepository: UserRepository,
+    private roleRepository: RoleRepository,
     private jwtService: JwtService,
   ) {}
 
   async fetchUserWithRole(username: string) {
-    const user = await this.userService.findOne({ username: username });
+    const user = await this.userRepository.findOne({ username: username });
 
-    const roles = await this.roleService.find({
+    const roles = await this.roleRepository.find({
       //   _id: [user.roleId],
       _id: ['60c0432fe396c169f48e06f1'],
     });
@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   async login(user: User) {
-    // const payload = await this.userService.findOne({ username: user.username });
+    // const payload = await this.userRepository.findOne({ username: user.username });
 
     const payload = await this.fetchUserWithRole(user.username);
 
@@ -59,7 +59,7 @@ export class AuthService {
         }, []),
       });
 
-      await this.userService.update(
+      await this.userRepository.update(
         { _id: payload.user._id },
         { token: access_token },
       );
@@ -80,10 +80,10 @@ export class AuthService {
   }
 
   async logout(user: User) {
-    const payload = await this.userService.findOne({ _id: user._id });
+    const payload = await this.userRepository.findOne({ _id: user._id });
 
     if (!!payload) {
-      await this.userService.update({ _id: payload._id }, { token: null });
+      await this.userRepository.update({ _id: payload._id }, { token: null });
 
       return {
         status: HttpStatus.OK,
