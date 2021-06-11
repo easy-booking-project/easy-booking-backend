@@ -52,3 +52,39 @@ This module would hold all the services about accessing database, which basicall
 # Contribution
 ## Before Committing
 Before committing, please use ```npm run lint``` first.
+
+# Function Explain
+
+## Login
+
+run `curl -X POST -H Content-type:application/json -d '{ "username": "will", "authenticationHash" : "authHash" }' 'http://localhost:3000/authentication/sign-in'` inside bash,
+or use any application you like to make request.
+I suggest using Postman.
+
+the return format should be:
+
+```
+{"access_token": ..., "refresh_token": ...}
+```
+
+## Refresh
+
+run `curl -X POST -H Content-type:application/json -H "Authorization: Bearer [refresh_token] " 'http://localhost:3000/authentication/refresh-access-token'`
+
+the return format should be:
+
+```
+{
+    "refresh_refresh": true if refresh token is refreshed otherwise false,
+    "access_token": ...,
+    "refresh_token": ... if refresh token is refreshed otherwise null
+}
+```
+
+## Logout
+
+run `curl -X POST -H Content-type:application/json -H "Authorization: Bearer [access_token] " 'http://localhost:3000/authentication/sign-out'`
+
+the return format should be: status 200. And if you take a look at database, token is null. 
+
+Notice: if you run ```Refresh``` after ```Logout``` it will return ```INSUFFICIENT PRIVILEGES```
