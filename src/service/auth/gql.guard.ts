@@ -50,22 +50,11 @@ export class GqlRolesGuard implements CanActivate {
       );
     }
 
-    // const hasPermission = requiredRoles.some((role) =>
-    //   (user as User).roles.includes(role),
-    // );
     return true;
-
-    // if (hasPermission) {
-    //   return hasPermission;
-    // } else {
-    //   throw new HttpException(
-    //     HttpResponseError.INSUFFICIENT_PRIVILEGES,
-    //     HttpStatus.BAD_REQUEST,
-    //   );
-    // }
   }
 }
 
+// TODO remove the unused the data argument
 export const CurrentUser = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(context);

@@ -20,41 +20,9 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async fetchUserWithRole(username: string) {
-    const user = await this.userRepository.findOne({ username: username });
-
-    const roles = await this.roleRepository.find({
-      _id: user.roleId,
-    });
-
-    return {
-      user,
-      roles,
-    };
-  }
-
-  private async generateJwtAccessToken(payload) {
-    // TODO change this so payload only contain id, do async fetch in guard
-    return await this.jwtService.sign(payload, {
-      secret: jwtConstants.access_secret,
-      expiresIn: jwtConstants.access_expired_time,
-    });
-  }
-
-  private async generateJwtRefreshToken(payload) {
-    // TODO change this so payload only contain id, do async fetch in guard
-    return await this.jwtService.sign(payload, {
-      secret: jwtConstants.refresh_secret,
-      expiresIn: jwtConstants.refresh_expired_time,
-    });
-  }
-
   async login(user: User) {
-    // const payload = await this.userRepository.findOne({ username: user.username });
-
     const payload = await this.fetchUserWithRole(user.username);
 
-    // TODO change this to compare hash
     if (payload.user.authenticationHash === user.authenticationHash) {
       const access_token = await this.generateJwtAccessToken({
         _id: payload.user._id,
@@ -131,5 +99,34 @@ export class AuthService {
         roles: user.roles,
       }),
     };
+  }
+
+  private async fetchUserWithRole(username: string) {
+    const user = await this.userRepository.findOne({ username: username });
+
+    const roles = await this.roleRepository.find({
+      _id: user.roleId,
+    });
+
+    return {
+      user,
+      roles,
+    };
+  }
+
+  private async generateJwtAccessToken(payload) {
+    // TODO change this so payload only contain id, do async fetch in guard
+    return await this.jwtService.sign(payload, {
+      secret: jwtConstants.access_secret,
+      expiresIn: jwtConstants.access_expired_time,
+    });
+  }
+
+  private async generateJwtRefreshToken(payload) {
+    // TODO change this so payload only contain id, do async fetch in guard
+    return await this.jwtService.sign(payload, {
+      secret: jwtConstants.refresh_secret,
+      expiresIn: jwtConstants.refresh_expired_time,
+    });
   }
 }
