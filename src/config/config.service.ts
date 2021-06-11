@@ -4,6 +4,6 @@ export class ConfigService {
   }
 
   public get dataBaseConnectionString() {
-    return this.get('DATA_CONNECTION_STRING');
+    return this.get('DB_CONNECTION_STRING');
   }
 }
