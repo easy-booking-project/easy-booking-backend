@@ -5,13 +5,10 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-// import { User } from '../objects/user';
 import { HttpResponseError, HttpResponseMessage, Role } from './constant';
 
 import { ROLES_KEY } from './roles.decorator';
 import { Reflector } from '@nestjs/core';
-import { User } from '@repository/user/user.schema';
-// import { HttpResponseError, HttpResponseMessage, Role } from '../enums';
 
 @Injectable()
 export class RolesGuard implements CanActivate {

@@ -1,3 +1,4 @@
+import { HttpException, Injectable } from '@nestjs/common';
 import {
   HttpResponseError,
   HttpResponseMessage,
@@ -5,12 +6,11 @@ import {
   jwtConstants,
 } from './constant';
 
-import { HttpException, Injectable } from '@nestjs/common';
-import { differenceInSeconds } from 'date-fns';
 import { JwtService } from '@nestjs/jwt';
 import { RoleRepository } from '@repository/role/role.repository';
 import { User } from '../../repository/user/user.schema';
 import { UserRepository } from '@repository/user/user.repository';
+import { differenceInSeconds } from 'date-fns';
 
 @Injectable()
 export class AuthService {
@@ -24,8 +24,7 @@ export class AuthService {
     const user = await this.userRepository.findOne({ username: username });
 
     const roles = await this.roleRepository.find({
-      //   _id: [user.roleId],
-      _id: ['60c0432fe396c169f48e06f1'],
+      _id: user.roleId,
     });
 
     return {
@@ -124,7 +123,7 @@ export class AuthService {
       refresh_token:
         refresh_refresh &&
         (await this.generateJwtRefreshToken({
-          _id: user.user.id,
+          _id: user._id,
           roles: user.roles,
         })),
       access_token: await this.generateJwtAccessToken({
