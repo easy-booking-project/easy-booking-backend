@@ -14,22 +14,22 @@ import { UserRepository } from '@repository/user/user.repository';
 export class UserController {
   constructor(private readonly userRepository: UserRepository) {}
 
-  @Get()
+  @Get('/obtain')
   async obtain(@Query('_id') _id: string) {
     return await this.userRepository.find(_id ? { _id } : {});
   }
 
-  @Post()
+  @Post('/create')
   async create(@Body() user: Partial<User>) {
     return await this.userRepository.insert(user);
   }
 
-  @Put()
+  @Put('/modify')
   async modify(@Query('_id') _id: string, @Body() user: Partial<User>) {
     return this.userRepository.update({ _id }, user);
   }
 
-  @Delete()
+  @Delete('/delete')
   async delete(@Query('_id') _id: string) {
     return this.userRepository.remove({ _id });
   }

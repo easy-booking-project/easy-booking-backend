@@ -1,13 +1,13 @@
 ### === Role ===
 
 ### Get all role
-GET http://localhost:3000/role HTTP/1.1
+GET http://localhost:3000/role/obtain HTTP/1.1
 
 ### Get single role
-GET http://localhost:3000/role?_id=something HTTP/1.1
+GET http://localhost:3000/role/obtain?_id=something HTTP/1.1
 
 ### Add a role
-POST http://localhost:3000/role HTTP/1.1
+POST http://localhost:3000/role/create HTTP/1.1
 content-type: application/json
 
 {
@@ -16,7 +16,7 @@ content-type: application/json
 }
 
 ### Modify a role
-PUT http://localhost:3000/role?_id=something HTTP/1.1
+PUT http://localhost:3000/role/modify?_id=something HTTP/1.1
 content-type: application/json
 
 {
@@ -24,19 +24,19 @@ content-type: application/json
 }
 
 ### Delete a role
-DELETE http://localhost:3000/role?_id=something HTTP/1.1
+DELETE http://localhost:3000/role/delete?_id=something HTTP/1.1
 
 
 ### === User ===
 
 ### Get all user
-GET http://localhost:3000/user HTTP/1.1
+GET http://localhost:3000/user/obtain HTTP/1.1
 
 ### Get single user
-GET http://localhost:3000/user?_id=something HTTP/1.1
+GET http://localhost:3000/user/obtain?_id=something HTTP/1.1
 
 ### Add a user
-POST http://localhost:3000/user HTTP/1.1
+POST http://localhost:3000/user/create HTTP/1.1
 content-type: application/json
 
 {
@@ -46,7 +46,7 @@ content-type: application/json
 }
 
 ### Modify a user
-PUT http://localhost:3000/user?_id=something HTTP/1.1
+PUT http://localhost:3000/user/modify?_id=something HTTP/1.1
 content-type: application/json
 
 {
@@ -54,4 +54,4 @@ content-type: application/json
 }
 
 ### Delete a user
-DELETE http://localhost:3000/user?_id=something HTTP/1.1
+DELETE http://localhost:3000/user/delete?_id=something HTTP/1.1
