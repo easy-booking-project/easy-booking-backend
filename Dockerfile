@@ -21,6 +21,7 @@ WORKDIR /home/node
 
 COPY --from=builder /home/node/package*.json /home/node/
 COPY --from=builder /home/node/dist/ /home/node/dist/
+COPY ./.env.prod /home/node/
 
 RUN npm ci
 
