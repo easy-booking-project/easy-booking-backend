@@ -11,6 +11,8 @@ import { UserRepository } from '@repository/user/user.repository';
 import { AuthService } from './auth.service';
 import { differenceInSeconds } from 'date-fns';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@repository/user/user.schema';
+import { Document } from 'mongoose';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
@@ -21,7 +23,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: true, // since we are using single token strategy
+      ignoreExpiration: false, // since we are using single token strategy
       secretOrKey: jwtConstants.access_secret,
     });
   }
@@ -31,26 +33,36 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
       _id: payload._id,
     });
 
-    if (!userFound)
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: HttpResponseError.USER_NOT_FOUND,
-          message: HttpResponseMessage.USER_NOT_FOUND,
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
+    this.handleUserNotFound(userFound);
+    this.handleUserTokenNotExist(userFound);
+    this.handleUserRefreshTokenStillValid(userFound);
 
-    if (!userFound.token)
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          error: HttpResponseError.INSUFFICIENT_PRIVILEGES,
-          message: HttpResponseMessage.INSUFFICIENT_PRIVILEGES,
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
+    return await this.regeneratePayload(payload);
+  }
 
+  private async regeneratePayload(payload) {
+    const refactoryPayload: any = {
+      _id: payload._id,
+      roles: payload.roles,
+    };
+
+    const timeDiff = differenceInSeconds(payload.exp * 1000, new Date());
+
+    const access_token_refreshed = timeDiff < 300;
+
+    refactoryPayload.access_token_refreshed = access_token_refreshed;
+
+    if (access_token_refreshed) {
+      refactoryPayload.access_token =
+        await this.authService.generateJwtAccessToken({
+          _id: payload._id,
+          roles: payload.roles,
+        });
+    }
+    return refactoryPayload;
+  }
+
+  private handleUserRefreshTokenStillValid(userFound: User & Document) {
     const refreshTokenStillValid = this.jwtService.verify(userFound.token, {
       secret: jwtConstants.refresh_secret,
     });
@@ -64,25 +76,30 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
         },
         HttpStatus.UNAUTHORIZED,
       );
+  }
 
-    const refactoryPayload: any = {
-      _id: payload._id,
-      roles: payload.roles,
-    };
-
-    const timeDiff = differenceInSeconds(payload.exp * 1000, new Date());
-
-    const refreshToken = timeDiff < 300;
-
-    refactoryPayload.refreshToken = refreshToken;
-
-    if (refreshToken) {
-      refactoryPayload.access_token = this.authService.generateJwtAccessToken({
-        _id: payload._id,
-        roles: payload.roles,
-      });
+  private handleUserNotFound(userFound: User & Document) {
+    if (!userFound) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: HttpResponseError.USER_NOT_FOUND,
+          message: HttpResponseMessage.USER_NOT_FOUND,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
+  }
 
-    return refactoryPayload;
+  private handleUserTokenNotExist(userFound: User & Document) {
+    if (!userFound.token)
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: HttpResponseError.INSUFFICIENT_PRIVILEGES,
+          message: HttpResponseMessage.INSUFFICIENT_PRIVILEGES,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
   }
 }
