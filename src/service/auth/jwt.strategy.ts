@@ -8,10 +8,17 @@ import {
 
 import { PassportStrategy } from '@nestjs/passport';
 import { UserRepository } from '@repository/user/user.repository';
+import { AuthService } from './auth.service';
+import differenceInSeconds from 'date-fns/differenceInSeconds';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
-  constructor() {
+  constructor(
+    private readonly authService: AuthService,
+    private readonly jwtService: JwtService,
+    private readonly userRepository: UserRepository,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -20,7 +27,58 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
   }
 
   async validate(payload: any) {
-    return { _id: payload._id, roles: payload.roles };
+    const userFound = await await this.userRepository.findOne({
+      _id: payload._id,
+    });
+
+    if (!userFound)
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          error: HttpResponseError.USER_NOT_FOUND,
+          message: HttpResponseMessage.USER_NOT_FOUND,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    if (!userFound.token)
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: HttpResponseError.INSUFFICIENT_PRIVILEGES,
+          message: HttpResponseMessage.INSUFFICIENT_PRIVILEGES,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    const refreshTokenStillValid = !this.jwtService.verify(userFound.token, {
+      secret: jwtConstants.refresh_secret,
+    });
+
+    if (!refreshTokenStillValid)
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: HttpResponseError.TOKEN_EXPIRED,
+          message: HttpResponseMessage.TOKEN_EXPIRED,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    const timeDiff = differenceInSeconds(payload.exp * 1000, new Date());
+
+    const refreshToken = timeDiff < 300;
+
+    const access_token =
+      refreshToken ??
+      this.authService.refreshToken({ _id: payload._id, roles: payload.roles });
+
+    return {
+      _id: payload._id,
+      roles: payload.roles,
+      refreshToken,
+      access_token,
+    };
   }
 }
 

@@ -47,7 +47,6 @@ export class AuthService {
 
       return {
         access_token,
-        refresh_token,
       };
     } else {
       throw new HttpException(
@@ -84,20 +83,16 @@ export class AuthService {
 
   async refreshToken(user) {
     const timeDiff = differenceInSeconds(user.exp * 1000, new Date());
-    const refresh_refresh = timeDiff > 300;
+    const tokenRefreshed = timeDiff > 300;
 
     return {
-      refresh_refresh,
-      refresh_token:
-        refresh_refresh &&
-        (await this.generateJwtRefreshToken({
+      tokenRefreshed,
+      access_token:
+        tokenRefreshed ??
+        (await this.generateJwtAccessToken({
           _id: user._id,
           roles: user.roles,
         })),
-      access_token: await this.generateJwtAccessToken({
-        _id: user._id,
-        roles: user.roles,
-      }),
     };
   }
 
