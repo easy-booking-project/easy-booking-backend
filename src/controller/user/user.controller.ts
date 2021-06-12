@@ -6,17 +6,36 @@ import {
   Post,
   Put,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
 import { UserRepository } from '@repository/user/user.repository';
+import { Role } from '@service/auth/constant';
+import { JwtAuthGuard } from '@service/auth/jwt-auth.guard';
+import { Roles } from '@service/auth/roles.decorator';
+import { RolesGuard } from '@service/auth/roles.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userRepository: UserRepository) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('fetch')
+  @Roles(Role.Admin)
   @Get('/obtain')
-  async obtain(@Query('_id') _id: string) {
-    return await this.userRepository.find(_id ? { _id } : {});
+  async obtain(@Req() req) {
+    const result = await this.userRepository.findOne(
+      req.user._id ? { _id: req.user._id } : {},
+    );
+
+    result.token = undefined;
+    result.authenticationHash = undefined;
+
+    return {
+      result,
+      ...req.user,
+    };
   }
 
   @Post('/create')
