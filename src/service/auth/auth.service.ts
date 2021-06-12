@@ -47,15 +47,6 @@ export class AuthService {
       return {
         access_token,
       };
-    } else {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          error: HttpResponseError.USER_NOT_FOUND,
-          message: HttpResponseMessage.WRONG_CREDENTIALS,
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
     }
   }
 
@@ -80,6 +71,26 @@ export class AuthService {
     }
   }
 
+  async generateJwtAccessToken(payload) {
+    // TODO change this so payload only contain id, do async fetch in guard
+    return await this.jwtService.sign(payload, {
+      secret: jwtConstants.access_secret,
+      expiresIn: jwtConstants.access_expired_time,
+    });
+  }
+
+  async generateJwtRefreshToken(payload) {
+    // TODO change this so payload only contain id, do async fetch in guard
+    return await this.jwtService.sign(payload, {
+      secret: jwtConstants.refresh_secret,
+      expiresIn: jwtConstants.refresh_expired_time,
+    });
+  }
+
+  async jwtDecode(token: string) {
+    return await this.jwtService.decode(token);
+  }
+
   private async fetchUserWithRole(username: string) {
     const user = await this.userRepository.findOne({ username: username });
 
@@ -91,21 +102,5 @@ export class AuthService {
       user,
       roles,
     };
-  }
-
-  public async generateJwtAccessToken(payload) {
-    // TODO change this so payload only contain id, do async fetch in guard
-    return await this.jwtService.sign(payload, {
-      secret: jwtConstants.access_secret,
-      expiresIn: jwtConstants.access_expired_time,
-    });
-  }
-
-  public async generateJwtRefreshToken(payload) {
-    // TODO change this so payload only contain id, do async fetch in guard
-    return await this.jwtService.sign(payload, {
-      secret: jwtConstants.refresh_secret,
-      expiresIn: jwtConstants.refresh_expired_time,
-    });
   }
 }

@@ -1,5 +1,7 @@
 import {
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -7,9 +9,10 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from './public.decorator';
 import { Reflector } from '@nestjs/core';
+import { HttpResponseError } from './constant';
 
 @Injectable()
-export class JwtAuthGuard extends AuthGuard('access') {
+export class JwtAuthGuard extends AuthGuard('cookie') {
   constructor(private reflector: Reflector) {
     super();
   }
@@ -30,8 +33,19 @@ export class JwtAuthGuard extends AuthGuard('access') {
   }
 
   handleRequest(err, user, info) {
-    if (err || !user) {
+    if (err) {
       throw err || new UnauthorizedException({ description: info });
+    }
+
+    if (!user) {
+      // TODO create global http exception util
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: HttpResponseError.COOKIE_NOT_EXIST,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     return user;

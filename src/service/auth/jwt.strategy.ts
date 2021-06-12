@@ -1,6 +1,7 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import {
+  CookieKeys,
   HttpResponseError,
   HttpResponseMessage,
   jwtConstants,
@@ -15,14 +16,16 @@ import { User } from '@repository/user/user.schema';
 import { Document } from 'mongoose';
 
 @Injectable()
-export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
+export class JwtAuthStrategy extends PassportStrategy(Strategy, 'cookie') {
   constructor(
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: (req: { cookies: { [x: string]: any } }) => {
+        return req?.cookies?.[CookieKeys.ACCESS_TOKEN];
+      },
       ignoreExpiration: false, // since we are using single token strategy
       secretOrKey: jwtConstants.access_secret,
     });

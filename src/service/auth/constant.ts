@@ -1,3 +1,7 @@
+export enum CookieKeys {
+  ACCESS_TOKEN = 'access_token',
+}
+
 export enum TIME {
   FIFTEEN_MINUTES = 900, // 15 min
   EIGHT_HOURS = 28800, // 8 hour
@@ -27,6 +31,7 @@ export enum Action {
 
 export enum HttpResponseError {
   TOKEN_EXPIRED = 'TOKEN_EXPIRED',
+  COOKIE_NOT_EXIST = 'COOKIE_NOT_EXIST',
   USER_NOT_FOUND = 'USER NOT FOUND',
   INSUFFICIENT_PRIVILEGES = 'INSUFFICIENT PRIVILEGES',
 }

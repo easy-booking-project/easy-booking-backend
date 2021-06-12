@@ -11,31 +11,39 @@ import {
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
 import { UserRepository } from '@repository/user/user.repository';
-import { Role } from '@service/auth/constant';
-import { JwtAuthGuard } from '@service/auth/jwt-auth.guard';
+import { CookieKeys, Role } from '@service/auth/constant';
 import { Roles } from '@service/auth/roles.decorator';
 import { RolesGuard } from '@service/auth/roles.guard';
+import { JwtAuthGuard } from '../../service/auth/jwt-auth.guard';
+import { Request } from 'express';
+import { AuthService } from '@service/auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly authService: AuthService,
+  ) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('fetch')
   @Roles(Role.Admin)
   @Get('/obtain')
-  async obtain(@Req() req) {
-    const result = await this.userRepository.findOne(
-      req.user._id ? { _id: req.user._id } : {},
+  async obtain(@Req() request: Request) {
+    const accessToken = request.cookies[CookieKeys.ACCESS_TOKEN];
+
+    const decodedUserInfo = (await this.authService.jwtDecode(
+      accessToken,
+    )) as User;
+
+    const user = await this.userRepository.findOne(
+      decodedUserInfo._id ? { _id: decodedUserInfo._id } : {},
     );
 
-    result.token = undefined;
-    result.authenticationHash = undefined;
+    delete user.token;
+    delete user.authenticationHash;
 
-    return {
-      result,
-      ...req.user,
-    };
+    return user;
   }
 
   @Post('/create')
