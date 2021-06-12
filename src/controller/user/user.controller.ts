@@ -6,17 +6,44 @@ import {
   Post,
   Put,
   Query,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
 import { UserRepository } from '@repository/user/user.repository';
+import { CookieKeys, Role } from '@service/auth/constant';
+import { Roles } from '@service/auth/roles.decorator';
+import { RolesGuard } from '@service/auth/roles.guard';
+import { JwtAuthGuard } from '../../service/auth/jwt-auth.guard';
+import { Request } from 'express';
+import { AuthService } from '@service/auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly authService: AuthService,
+  ) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('fetch')
+  @Roles(Role.Admin)
   @Get('/obtain')
-  async obtain(@Query('_id') _id: string) {
-    return await this.userRepository.find(_id ? { _id } : {});
+  async obtain(@Req() request: Request) {
+    const accessToken = request.cookies[CookieKeys.ACCESS_TOKEN];
+
+    const decodedUserInfo = (await this.authService.jwtDecode(
+      accessToken,
+    )) as User;
+
+    const user = await this.userRepository.findOne(
+      decodedUserInfo._id ? { _id: decodedUserInfo._id } : {},
+    );
+
+    delete user.token;
+    delete user.authenticationHash;
+
+    return user;
   }
 
   @Post('/create')
