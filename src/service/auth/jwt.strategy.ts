@@ -9,7 +9,7 @@ import {
 import { PassportStrategy } from '@nestjs/passport';
 import { UserRepository } from '@repository/user/user.repository';
 import { AuthService } from './auth.service';
-import differenceInSeconds from 'date-fns/differenceInSeconds';
+import { differenceInSeconds } from 'date-fns';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -51,7 +51,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
         HttpStatus.UNAUTHORIZED,
       );
 
-    const refreshTokenStillValid = !this.jwtService.verify(userFound.token, {
+    const refreshTokenStillValid = this.jwtService.verify(userFound.token, {
       secret: jwtConstants.refresh_secret,
     });
 
@@ -65,20 +65,25 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
         HttpStatus.UNAUTHORIZED,
       );
 
+    const refactoryPayload: any = {
+      _id: payload._id,
+      roles: payload.roles,
+    };
+
     const timeDiff = differenceInSeconds(payload.exp * 1000, new Date());
 
     const refreshToken = timeDiff < 300;
 
-    const access_token =
-      refreshToken ??
-      this.authService.refreshToken({ _id: payload._id, roles: payload.roles });
+    refactoryPayload.refreshToken = refreshToken;
 
-    return {
-      _id: payload._id,
-      roles: payload.roles,
-      refreshToken,
-      access_token,
-    };
+    if (refreshToken) {
+      refactoryPayload.access_token = this.authService.generateJwtAccessToken({
+        _id: payload._id,
+        roles: payload.roles,
+      });
+    }
+
+    return refactoryPayload;
   }
 }
 

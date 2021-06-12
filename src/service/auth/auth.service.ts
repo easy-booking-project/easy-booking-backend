@@ -81,21 +81,6 @@ export class AuthService {
     }
   }
 
-  async refreshToken(user) {
-    const timeDiff = differenceInSeconds(user.exp * 1000, new Date());
-    const tokenRefreshed = timeDiff > 300;
-
-    return {
-      tokenRefreshed,
-      access_token:
-        tokenRefreshed ??
-        (await this.generateJwtAccessToken({
-          _id: user._id,
-          roles: user.roles,
-        })),
-    };
-  }
-
   private async fetchUserWithRole(username: string) {
     const user = await this.userRepository.findOne({ username: username });
 
@@ -109,7 +94,7 @@ export class AuthService {
     };
   }
 
-  private async generateJwtAccessToken(payload) {
+  public async generateJwtAccessToken(payload) {
     // TODO change this so payload only contain id, do async fetch in guard
     return await this.jwtService.sign(payload, {
       secret: jwtConstants.access_secret,
@@ -117,7 +102,7 @@ export class AuthService {
     });
   }
 
-  private async generateJwtRefreshToken(payload) {
+  public async generateJwtRefreshToken(payload) {
     // TODO change this so payload only contain id, do async fetch in guard
     return await this.jwtService.sign(payload, {
       secret: jwtConstants.refresh_secret,
