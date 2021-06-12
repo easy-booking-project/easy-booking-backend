@@ -26,7 +26,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy, 'cookie') {
       jwtFromRequest: (req: { cookies: { [x: string]: any } }) => {
         return req?.cookies?.[CookieKeys.ACCESS_TOKEN];
       },
-      ignoreExpiration: false, // since we are using single token strategy
+      ignoreExpiration: false,
       secretOrKey: jwtConstants.access_secret,
     });
   }
