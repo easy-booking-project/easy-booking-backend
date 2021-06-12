@@ -24,9 +24,14 @@ export class UserController {
   @Get('fetch')
   @Roles(Role.Admin)
   async obtain(@Req() req) {
-    return await this.userRepository.find(
+    const result = await this.userRepository.find(
       req.user._id ? { _id: req.user._id } : {},
     );
+
+    return {
+      ...result,
+      ...req.user,
+    };
   }
 
   @Post()
