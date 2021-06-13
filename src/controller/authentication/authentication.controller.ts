@@ -41,6 +41,7 @@ export class AuthenticationController {
       await this.userRepository.insert(user);
     } catch (e) {
       switch (e.code) {
+        // TODO use constant for this case
         // username duplicate exception
         case 11000:
           throw new HttpException(
