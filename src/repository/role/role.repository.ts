@@ -14,10 +14,10 @@ export class RoleRepository extends RepositoryBase<Role> {
   }
 
   async initialize() {
-    this.initialRoleNames.forEach((name) => this.createRoleIfNotExsit(name));
+    this.initialRoleNames.forEach((name) => this.createRoleIfNotExist(name));
   }
 
-  async createRoleIfNotExsit(name: string) {
+  async createRoleIfNotExist(name: string) {
     const roleExisting = await this.findOne({ name });
     if (!roleExisting) {
       this.insert({
