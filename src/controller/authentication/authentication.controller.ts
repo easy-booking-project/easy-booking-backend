@@ -9,6 +9,7 @@ import {
 import { User } from '@repository/user/user.schema';
 import { AuthService } from '@service/auth/auth.service';
 import { Response } from 'express';
+import { UserRepository } from '../../repository/user/user.repository';
 import {
   CookieKeys,
   HttpResponseError,
@@ -17,10 +18,19 @@ import {
 
 @Controller('authentication')
 export class AuthenticationController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private userRepository: UserRepository,
+    private authService: AuthService,
+  ) {}
 
   @Post('sign-up')
   async signUp(@Body() user: User) {
+    try {
+      await this.userRepository.insert(user);
+    } catch (e) {
+      console.error(e);
+    }
+
     return user;
   }
 
