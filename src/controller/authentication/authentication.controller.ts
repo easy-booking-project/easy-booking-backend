@@ -36,10 +36,24 @@ export class AuthenticationController {
         throw new Error('User Role Not Existed in DataBase');
       }
 
-      user.roleId = UserRole._id;
+      user.roleIds = [UserRole._id];
+
       await this.userRepository.insert(user);
     } catch (e) {
-      console.error(e);
+      switch (e.code) {
+        // username duplicate exception
+        case 11000:
+          throw new HttpException(
+            {
+              status: HttpStatus.NOT_ACCEPTABLE,
+              error: HttpResponseError.DUPLICATED_USER_NAME,
+              message: HttpResponseMessage.DUPLICATED_USER_NAME,
+            },
+            HttpStatus.UNAUTHORIZED,
+          );
+        default:
+          throw new Error(e);
+      }
     }
 
     return user;
