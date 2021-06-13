@@ -11,3 +11,9 @@ export class Role extends Document {
 }
 
 export const RoleSchema = SchemaFactory.createForClass(Role);
+
+export enum Roles {
+  Super = 'Super',
+  Admin = 'Admin',
+  User = 'User',
+}

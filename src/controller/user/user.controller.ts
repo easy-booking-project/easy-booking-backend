@@ -11,12 +11,13 @@ import {
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
 import { UserRepository } from '@repository/user/user.repository';
-import { CookieKeys, Role } from '@service/auth/constant';
-import { Roles } from '@service/auth/roles.decorator';
+import { CookieKeys } from '@service/auth/constant';
+import { AllowRoles } from '@service/auth/roles.decorator';
 import { RolesGuard } from '@service/auth/roles.guard';
 import { JwtAuthGuard } from '../../service/auth/jwt-auth.guard';
 import { Request } from 'express';
 import { AuthService } from '@service/auth/auth.service';
+import { Roles } from '@repository/role/role.schema';
 
 @Controller('user')
 export class UserController {
@@ -26,8 +27,8 @@ export class UserController {
   ) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @AllowRoles(Roles.Super, Roles.Admin, Roles.User)
   @Get('fetch')
-  @Roles(Role.Admin)
   @Get('/obtain')
   async obtain(@Req() request: Request) {
     const accessToken = request.cookies[CookieKeys.ACCESS_TOKEN];

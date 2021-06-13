@@ -5,17 +5,18 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
-import { HttpResponseError, HttpResponseMessage, Role } from './constant';
+import { HttpResponseError, HttpResponseMessage } from './constant';
 
 import { ROLES_KEY } from './roles.decorator';
 import { Reflector } from '@nestjs/core';
+import { Roles } from '@repository/role/role.schema';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+    const requiredRoles = this.reflector.getAllAndOverride<Roles[]>(ROLES_KEY, [
       context.getHandler(),
       context.getClass(),
     ]);
@@ -37,6 +38,7 @@ export class RolesGuard implements CanActivate {
       );
     }
 
+    // TODO implement super user which has permission to all api
     const hasPermission = requiredRoles.some((role) =>
       user.roles.includes(role),
     );
