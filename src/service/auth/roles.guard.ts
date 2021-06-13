@@ -38,6 +38,7 @@ export class RolesGuard implements CanActivate {
       );
     }
 
+    // TODO implement super user which has permission to all api
     const hasPermission = requiredRoles.some((role) =>
       user.roles.includes(role),
     );
