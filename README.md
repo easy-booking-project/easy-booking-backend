@@ -14,12 +14,6 @@ Install Node modules by the following command.
 npm i
 ```
 
-## Running a MongoDB Instance
-
-Change your database connection string in .env.local to connect your local MongoDB.
-
-run ```docker ps``` to checkout which port MongoDB has exposed to.
-
 ### Starting MongoDB Instance Using Docker
 
 To make it simple, you can start a MongoDB instance using Docker by the command below. It gives you a empty MongoDB instance called _mongo_ with no password and a random port opened.
@@ -35,6 +29,12 @@ docker ps
 ```
 
 Note that this would create a MongoDB container without data persistence. If you want to persist the data, considering using `-v` flag for `docker run`.
+
+## Running a MongoDB Instance
+
+Change your database connection string in .env.local to connect your local MongoDB.
+
+run `docker ps` to checkout which port MongoDB has exposed to.
 
 ### Running the Backend App
 
