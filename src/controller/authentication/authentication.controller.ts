@@ -10,6 +10,8 @@ import { User } from '@repository/user/user.schema';
 import { AuthService } from '@service/auth/auth.service';
 import { Response } from 'express';
 import { UserRepository } from '../../repository/user/user.repository';
+import { RoleRepository } from '../../repository/role/role.repository';
+import { Roles } from '@repository/role/role.schema';
 import {
   CookieKeys,
   HttpResponseError,
@@ -20,12 +22,21 @@ import {
 export class AuthenticationController {
   constructor(
     private userRepository: UserRepository,
+    private roleRepository: RoleRepository,
     private authService: AuthService,
   ) {}
 
   @Post('sign-up')
   async signUp(@Body() user: User) {
     try {
+      const UserRole = await this.roleRepository.findOne({ name: Roles.User });
+
+      if (!UserRole) {
+        //TODO thing about better way of throwing this Error
+        throw new Error('User Role Not Existed in DataBase');
+      }
+
+      user.roleId = UserRole._id;
       await this.userRepository.insert(user);
     } catch (e) {
       console.error(e);
