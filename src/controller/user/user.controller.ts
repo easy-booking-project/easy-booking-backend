@@ -49,8 +49,7 @@ export class UserController {
 
   @Post('/create')
   async create(@Body() user: Partial<User>) {
-    // return await this.userRepository.insert(user);
-    return 'User not created please use sign-up to create user';
+    return await this.userRepository.insert(user);
   }
 
   @Put('/modify')
