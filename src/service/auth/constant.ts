@@ -16,11 +16,6 @@ export const jwtConstants = {
   refresh_expired_time: TIME.EIGHT_HOURS,
 };
 
-export enum Role {
-  User = 'User',
-  Admin = 'Admin',
-}
-
 export enum Action {
   Manage = 'manage',
   Create = 'create',

@@ -1,5 +1,5 @@
 import { SetMetadata } from '@nestjs/common';
-import { Role } from './constant';
+import { Roles } from '@repository/role/role.schema';
 
 export const ROLES_KEY = 'roles';
-export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);
+export const AllowRoles = (...roles: Roles[]) => SetMetadata(ROLES_KEY, roles);
