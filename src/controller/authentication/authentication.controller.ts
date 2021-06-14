@@ -9,6 +9,9 @@ import {
 import { User } from '@repository/user/user.schema';
 import { AuthService } from '@service/auth/auth.service';
 import { Response } from 'express';
+import { UserRepository } from '../../repository/user/user.repository';
+import { RoleRepository } from '../../repository/role/role.repository';
+import { Roles } from '@repository/role/role.schema';
 import {
   CookieKeys,
   HttpResponseError,
@@ -17,10 +20,43 @@ import {
 
 @Controller('authentication')
 export class AuthenticationController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private userRepository: UserRepository,
+    private roleRepository: RoleRepository,
+    private authService: AuthService,
+  ) {}
 
   @Post('sign-up')
   async signUp(@Body() user: User) {
+    try {
+      const UserRole = await this.roleRepository.findOne({ name: Roles.User });
+
+      if (!UserRole) {
+        //TODO thing about better way of throwing this Error
+        throw new Error('User Role Not Existed in DataBase');
+      }
+
+      user.roleIds = [UserRole._id];
+
+      await this.userRepository.insert(user);
+    } catch (e) {
+      switch (e.code) {
+        // TODO use constant for this case
+        // username duplicate exception
+        case 11000:
+          throw new HttpException(
+            {
+              status: HttpStatus.NOT_ACCEPTABLE,
+              error: HttpResponseError.DUPLICATED_USER_NAME,
+              message: HttpResponseMessage.DUPLICATED_USER_NAME,
+            },
+            HttpStatus.UNAUTHORIZED,
+          );
+        default:
+          throw new Error(e);
+      }
+    }
+
     return user;
   }
 

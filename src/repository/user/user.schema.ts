@@ -9,8 +9,8 @@ export class User extends Document {
   @Prop({ type: String, required: true })
   authenticationHash: string;
 
-  @Prop({ type: Types.ObjectId, required: true, ref: 'role' })
-  roleId: Types.ObjectId | string;
+  @Prop({ type: [Types.ObjectId], required: true, ref: 'role' })
+  roleIds: Types.ObjectId[] | string[];
 
   @Prop({ type: String })
   nickname?: string;
