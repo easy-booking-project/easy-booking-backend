@@ -38,6 +38,8 @@ export class AuthenticationController {
 
       user.roleIds = [UserRole._id];
 
+      user.authenticationHash =
+        this.authService.generateServerAuthenticationHash(user);
       await this.userRepository.insert(user);
     } catch (e) {
       switch (e.code) {
@@ -67,7 +69,8 @@ export class AuthenticationController {
   ) {
     const { access_token } = await this.authService.login({
       username: info?.username || '',
-      authenticationHash: info?.authenticationHash || '',
+      authenticationHash:
+        this.authService.generateServerAuthenticationHash(info),
     } as User);
 
     if (!access_token) {

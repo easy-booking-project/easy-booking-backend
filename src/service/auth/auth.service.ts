@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RoleRepository } from '@repository/role/role.repository';
 import { User } from '@repository/user/user.schema';
 import { UserRepository } from '@repository/user/user.repository';
+import { createHash } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,17 @@ export class AuthService {
     private roleRepository: RoleRepository,
     private jwtService: JwtService,
   ) {}
+
+  public generateServerAuthenticationHash(user: {
+    username: string;
+    authenticationHash: string;
+  }) {
+    const secret = 'S>;mi#4dRBQ>:KW_WTZbo^1@f}r<kc';
+    const inputString = [user.username, secret, user.authenticationHash].join(
+      ',',
+    );
+    return createHash('sha256').update(inputString).digest('hex');
+  }
 
   async login(user: User) {
     const payload = await this.fetchUserWithRole(user.username);
