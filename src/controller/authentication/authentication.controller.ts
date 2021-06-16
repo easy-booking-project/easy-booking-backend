@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
 import { AuthService } from '@service/auth/auth.service';
+import { createHash } from 'crypto';
 import { Response } from 'express';
 import { UserRepository } from '../../repository/user/user.repository';
 import { RoleRepository } from '../../repository/role/role.repository';
@@ -38,6 +39,7 @@ export class AuthenticationController {
 
       user.roleIds = [UserRole._id];
 
+      user.authenticationHash = this.generateServerAuthenticationHash(user);
       await this.userRepository.insert(user);
     } catch (e) {
       switch (e.code) {
@@ -67,7 +69,7 @@ export class AuthenticationController {
   ) {
     const { access_token } = await this.authService.login({
       username: info?.username || '',
-      authenticationHash: info?.authenticationHash || '',
+      authenticationHash: this.generateServerAuthenticationHash(info),
     } as User);
 
     if (!access_token) {
@@ -87,5 +89,17 @@ export class AuthenticationController {
   @Post('sign-out')
   async signOut(@Res({ passthrough: true }) response: Response) {
     response.clearCookie(CookieKeys.ACCESS_TOKEN);
+  }
+
+  // TODO this function should be put into a service
+  private generateServerAuthenticationHash(user: {
+    username: string;
+    authenticationHash: string;
+  }) {
+    const secret = 'this should be a rondomly generated string';
+    const inputString = [user.username, secret, user.authenticationHash].join(
+      ',',
+    );
+    return createHash('sha256').update(inputString).digest('hex');
   }
 }
