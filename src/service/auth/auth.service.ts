@@ -24,7 +24,7 @@ export class AuthService {
     username: string;
     authenticationHash: string;
   }) {
-    const secret = 'this should be a randomly generated string';
+    const secret = 'S>;mi#4dRBQ>:KW_WTZbo^1@f}r<kc';
     const inputString = [user.username, secret, user.authenticationHash].join(
       ',',
     );
