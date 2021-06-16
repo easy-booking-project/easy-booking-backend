@@ -34,8 +34,6 @@ export class AuthService {
   async login(user: User) {
     const payload = await this.fetchUserWithRole(user.username);
 
-    console.log(payload.user.authenticationHash, user.authenticationHash);
-
     if (payload.user.authenticationHash === user.authenticationHash) {
       const access_token = await this.generateJwtAccessToken({
         _id: payload.user._id,
