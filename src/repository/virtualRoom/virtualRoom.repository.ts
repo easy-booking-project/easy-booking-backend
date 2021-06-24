@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RepositoryBase } from '@repository/repository.base';
 import { Document, Model } from 'mongoose';
-import { virtualRoom } from './virtualRoom.schema';
+import { VirtualRoom } from './VirtualRoom.schema';
 
 @Injectable()
-export class virtualRoomRepository extends RepositoryBase<virtualRoom> {
+export class VirtualRoomRepository extends RepositoryBase<VirtualRoom> {
   constructor(
-    @InjectModel(virtualRoom.name) model: Model<virtualRoom & Document>,
+    @InjectModel(VirtualRoom.name) model: Model<VirtualRoom & Document>,
   ) {
     super(model);
   }
