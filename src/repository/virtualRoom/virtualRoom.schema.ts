@@ -43,7 +43,7 @@ export class VirtualRoom extends Document {
   active: boolean;
 }
 
-export const virtualRoomSchema = SchemaFactory.createForClass(VirtualRoom);
+export const VirtualRoomSchema = SchemaFactory.createForClass(VirtualRoom);
 
 export enum VirtualRoomType {
   MeetingRoom = ' MeetingRoom',
