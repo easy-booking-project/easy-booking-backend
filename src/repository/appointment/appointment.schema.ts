@@ -22,4 +22,4 @@ export class Appointment extends Document {
   participants: Types.ObjectId[] | string[];
 }
 
-export const GroupSchema = SchemaFactory.createForClass(Appointment);
+export const AppointmentSchema = SchemaFactory.createForClass(Appointment);

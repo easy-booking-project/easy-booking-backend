@@ -22,4 +22,4 @@ export class Organization extends Document {
   active: boolean;
 }
 
-export const GroupSchema = SchemaFactory.createForClass(Organization);
+export const OrganizationSchema = SchemaFactory.createForClass(Organization);

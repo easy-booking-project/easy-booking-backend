@@ -16,4 +16,4 @@ export class Slot extends Document {
   description: string[];
 }
 
-export const GroupSchema = SchemaFactory.createForClass(Slot);
+export const SlotSchema = SchemaFactory.createForClass(Slot);
