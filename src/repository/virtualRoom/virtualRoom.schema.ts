@@ -2,7 +2,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
 @Schema()
-export class virtualRoom extends Document {
+export class VirtualRoom extends Document {
   @Prop({ type: String, required: true })
   type: string;
 
@@ -43,7 +43,7 @@ export class virtualRoom extends Document {
   active: boolean;
 }
 
-export const virtualRoomSchema = SchemaFactory.createForClass(virtualRoom);
+export const virtualRoomSchema = SchemaFactory.createForClass(VirtualRoom);
 
 export enum VirtualRoomType {
   MeetingRoom = ' MeetingRoom',
