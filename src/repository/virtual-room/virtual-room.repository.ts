@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RepositoryBase } from '@repository/repository.base';
 import { Document, Model } from 'mongoose';
-import { VirtualRoom } from './VirtualRoom.schema';
+import { VirtualRoom } from './virtual-room.schema';
 
 @Injectable()
 export class VirtualRoomRepository extends RepositoryBase<VirtualRoom> {

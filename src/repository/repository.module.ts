@@ -13,7 +13,7 @@ import { Slot, SlotSchema } from './slot/slot.schema';
 import {
   VirtualRoom,
   VirtualRoomSchema,
-} from './virtualRoom/virtualRoom.schema';
+} from './virtual-room/virtual-room.schema';
 
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -23,7 +23,7 @@ import { AppointmentRepository } from './appointment/appointment.repository';
 import { GroupRepository } from './group/group.repository';
 import { OrganizationRepository } from './organization/organization.repository';
 import { SlotRepository } from './slot/slot.repository';
-import { VirtualRoomRepository } from './virtualRoom/virtualRoom.repository';
+import { VirtualRoomRepository } from './virtual-room/virtual-room.repository';
 
 @Module({
   imports: [
