@@ -7,7 +7,7 @@ export class Group extends Document {
   name: string;
 
   @Prop({ type: String })
-  description: string;
+  description?: string;
 
   @Prop({ type: [Types.ObjectId], required: true, ref: 'user' })
   admins: Types.ObjectId[] | string[];

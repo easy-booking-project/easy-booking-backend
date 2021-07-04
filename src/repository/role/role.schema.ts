@@ -7,7 +7,7 @@ export class Role extends Document {
   name: string;
 
   @Prop({ type: String })
-  description: string;
+  description?: string;
 }
 
 export const RoleSchema = SchemaFactory.createForClass(Role);
@@ -15,5 +15,6 @@ export const RoleSchema = SchemaFactory.createForClass(Role);
 export enum Roles {
   Super = 'Super',
   Admin = 'Admin',
+  Member = 'Member',
   User = 'User',
 }
