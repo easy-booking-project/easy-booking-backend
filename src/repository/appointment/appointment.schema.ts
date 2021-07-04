@@ -2,15 +2,10 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
 export enum CycleFrame {
+  YEAR = 'Year',
   MONTH = 'Month',
   WEEK = 'Week',
   DAY = 'Day',
-}
-
-export class Repeat {
-  cycleStartDate: Date;
-  cycleEndDate: Date;
-  cycleFrame: CycleFrame;
 }
 
 @Schema()
@@ -29,8 +24,17 @@ export class Appointment extends Document {
   @Prop({ type: Date, required: true })
   toTime: Date;
 
-  @Prop({ type: Repeat, required: true })
-  repeat: Repeat;
+  @Prop({ type: Date, required: true })
+  cycleStartDate: Date;
+
+  @Prop({ type: Date, required: true })
+  cycleEndDate: Date;
+
+  @Prop({ type: CycleFrame, required: true })
+  cycleFrame: CycleFrame;
+
+  @Prop({ type: Object, required: true })
+  repeatOn: any; // TODO different repeat condition depends on cycle frame (monthly/ weekly/ yearly)
 
   @Prop({ type: [Types.ObjectId], required: true, ref: 'user' })
   participants: Types.ObjectId[] | string[];

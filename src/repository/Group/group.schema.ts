@@ -4,16 +4,16 @@ import { Document, Types } from 'mongoose';
 @Schema()
 export class Group extends Document {
   @Prop({ type: String, required: true, unique: true })
-  groupName: string;
+  name: string;
 
   @Prop({ type: String })
   description: string;
 
   @Prop({ type: [Types.ObjectId], required: true, ref: 'user' })
-  admin: Types.ObjectId[] | string[];
+  admins: Types.ObjectId[] | string[];
 
   @Prop({ type: [Types.ObjectId], required: true, ref: 'user' })
-  member: Types.ObjectId[] | string[];
+  members: Types.ObjectId[] | string[];
 
   @Prop({ type: Boolean, required: true })
   active: boolean;
