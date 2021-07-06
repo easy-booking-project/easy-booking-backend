@@ -4,7 +4,7 @@ import {
   CookieKeys,
   HttpResponseError,
   HttpResponseMessage,
-  jwtConstants,
+  JwtConstants,
 } from './constant';
 
 import { PassportStrategy } from '@nestjs/passport';
@@ -27,12 +27,12 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy, 'cookie') {
         return req?.cookies?.[CookieKeys.ACCESS_TOKEN];
       },
       ignoreExpiration: false,
-      secretOrKey: jwtConstants.access_secret,
+      secretOrKey: JwtConstants.access_secret,
     });
   }
 
   async validate(payload: any) {
-    const userFound = await await this.userRepository.findOne({
+    const userFound = await this.userRepository.findOne({
       _id: payload._id,
     });
 
@@ -44,7 +44,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy, 'cookie') {
   }
 
   private async regeneratePayload(payload) {
-    const refactoryPayload: any = {
+    const refactorPayload: any = {
       _id: payload._id,
       roles: payload.roles,
     };
@@ -53,21 +53,21 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy, 'cookie') {
 
     const access_token_refreshed = timeDiff < 300;
 
-    refactoryPayload.access_token_refreshed = access_token_refreshed;
+    refactorPayload.access_token_refreshed = access_token_refreshed;
 
     if (access_token_refreshed) {
-      refactoryPayload.access_token =
+      refactorPayload.access_token =
         await this.authService.generateJwtAccessToken({
           _id: payload._id,
           roles: payload.roles,
         });
     }
-    return refactoryPayload;
+    return refactorPayload;
   }
 
   private handleUserRefreshTokenStillValid(userFound: User & Document) {
     const refreshTokenStillValid = this.jwtService.verify(userFound.token, {
-      secret: jwtConstants.refresh_secret,
+      secret: JwtConstants.refresh_secret,
     });
 
     if (!refreshTokenStillValid)

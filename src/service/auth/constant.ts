@@ -7,12 +7,14 @@ export enum TIME {
   EIGHT_HOURS = 28800, // 8 hour
 }
 
-export const jwtConstants = {
+export const AuthHashSecret = 'S>;mi#4dRBQ>:KW_WTZbo^1@f}r<kc';
+
+export const JwtConstants = {
   access_secret:
-    '(DL$bS1IygCE@[-Sh.YAyulR{y[NUeyr<^>.f$,lYD}9wswLCGAFFEN+)g>2nA4',
+    '(DL$bS1IygCE@[-Sh.YAyUlR{y[NUeYr<^>.f$,lYD}9wswLcGAfFEN+)g>2nA4',
   access_expired_time: TIME.FIFTEEN_MINUTES,
   refresh_secret:
-    'W"])E&jZzH2u}ypxde)E]4p(34jL3^Lj<x)G2vz^J[qD/~BHm:Sx?3:]d^q.(Q7',
+    'W"])E&jZzH2u}ypxFde)E]4p(34jL3^Lj<x)G2vz^J[qD/~BHm:Sx?3:]d^q.(Q7',
   refresh_expired_time: TIME.EIGHT_HOURS,
 };
 
