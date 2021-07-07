@@ -1,6 +1,12 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
+export enum VirtualRoomStatus {
+  ACTIVE = 'Active',
+  INACTIVE = 'Inactive',
+  MAINTENANCE = 'Maintenance',
+}
+
 @Schema()
 export class VirtualRoom extends Document {
   // TODO make a reference table for type
@@ -37,9 +43,8 @@ export class VirtualRoom extends Document {
   @Prop({ type: Number, required: true })
   capacity: number;
 
-  // TODO change to enum type
-  @Prop({ type: String, required: true })
-  status: string;
+  @Prop({ type: VirtualRoomStatus, required: true })
+  status: VirtualRoomStatus;
 }
 
 export const VirtualRoomSchema = SchemaFactory.createForClass(VirtualRoom);
@@ -49,10 +54,4 @@ export enum VirtualRoomType {
   CLASS_ROOM = 'Class Room',
   VIRTUAL = 'Virtual',
   // TODO more
-}
-
-export enum VirtualRoomStatus {
-  ACTIVE = 'Active',
-  INACTIVE = 'Inactive',
-  MAINTENANCE = 'Maintenance',
 }
