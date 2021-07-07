@@ -34,9 +34,6 @@ export class VirtualRoom extends Document {
   @Prop({ type: [Types.ObjectId], required: true, ref: 'user' })
   validToUser: Types.ObjectId[] | string[];
 
-  // @Prop({ type: Boolean, required: true })
-  // isPublic: boolean;
-
   @Prop({ type: Number, required: true })
   capacity: number;
 

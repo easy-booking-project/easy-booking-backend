@@ -19,8 +19,6 @@ export class Appointment extends Document {
   @Prop({ type: String })
   description?: string;
 
-  // TODO use mongoose dateTime
-  // TODO use javascript time-zone
   @Prop({ type: Date, required: true })
   fromTime: Date;
 
