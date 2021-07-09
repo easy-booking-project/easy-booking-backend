@@ -1,9 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import {
+  AuthHashSecret,
   HttpResponseError,
   HttpResponseMessage,
   HttpStatus,
-  jwtConstants,
+  JwtConstants,
 } from './constant';
 
 import { JwtService } from '@nestjs/jwt';
@@ -24,7 +25,7 @@ export class AuthService {
     username: string;
     authenticationHash: string;
   }) {
-    const secret = 'S>;mi#4dRBQ>:KW_WTZbo^1@f}r<kc';
+    const secret = AuthHashSecret;
     const inputString = [user.username, secret, user.authenticationHash].join(
       ',',
     );
@@ -86,16 +87,16 @@ export class AuthService {
   async generateJwtAccessToken(payload) {
     // TODO change this so payload only contain id, do async fetch in guard
     return await this.jwtService.sign(payload, {
-      secret: jwtConstants.access_secret,
-      expiresIn: jwtConstants.access_expired_time,
+      secret: JwtConstants.access_secret,
+      expiresIn: JwtConstants.access_expired_time,
     });
   }
 
   async generateJwtRefreshToken(payload) {
     // TODO change this so payload only contain id, do async fetch in guard
     return await this.jwtService.sign(payload, {
-      secret: jwtConstants.refresh_secret,
-      expiresIn: jwtConstants.refresh_expired_time,
+      secret: JwtConstants.refresh_secret,
+      expiresIn: JwtConstants.refresh_expired_time,
     });
   }
 
