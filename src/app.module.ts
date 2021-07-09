@@ -13,7 +13,11 @@ import { ServiceModule } from './service/service.module';
     // NOTE: might have to import config module to other part of module
     ConfigModule.forRoot({
       envFilePath:
-        process.env.NODE_ENV !== 'production' ? '.env.local' : '.env.prod',
+        process.env.NODE_ENV === 'production'
+          ? '.env.prod'
+          : process.env.NODE_ENV === 'prodLocal'
+          ? '.env.prod.local'
+          : '.env.local',
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
