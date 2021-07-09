@@ -2,7 +2,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema()
-export class Role extends Document {
+export class Organization extends Document {
   @Prop({ type: String, required: true, unique: true })
   name: string;
 
@@ -10,11 +10,4 @@ export class Role extends Document {
   description?: string;
 }
 
-export const RoleSchema = SchemaFactory.createForClass(Role);
-
-export enum Roles {
-  Super = 'Super',
-  Admin = 'Admin',
-  Member = 'Member',
-  User = 'User',
-}
+export const OrganizationSchema = SchemaFactory.createForClass(Organization);
