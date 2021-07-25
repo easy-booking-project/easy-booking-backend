@@ -1,19 +1,14 @@
 import {
   Body,
-  CallHandler,
   Controller,
   Delete,
-  ExecutionContext,
   Get,
-  Injectable,
-  NestInterceptor,
   Post,
   Put,
   Query,
   Req,
   UseGuards,
   UseInterceptors,
-  UsePipes,
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
 import { UserRepository } from '@repository/user/user.repository';
@@ -24,25 +19,7 @@ import { JwtAuthGuard } from '../../service/auth/jwt-auth.guard';
 import { Request } from 'express';
 import { AuthService } from '@service/auth/auth.service';
 import { Roles } from '@repository/role/role.schema';
-import { Public } from '../../service/auth/public.decorator';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { randomInt } from 'crypto';
-
-@Injectable()
-export class refreshTokenInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('Before...');
-
-    const response = context.switchToHttp().getResponse();
-
-    response.cookie('RANDOM', randomInt(0, 10), {
-      httpOnly: true,
-    });
-
-    return;
-  }
-}
+import { RefreshToken } from '@service/auth/refreshToken.decorator';
 
 @Controller('user')
 export class UserController {
@@ -51,16 +28,9 @@ export class UserController {
     private readonly authService: AuthService,
   ) {}
 
-  //   @second()
-  @UseInterceptors(refreshTokenInterceptor)
-
-  @Post('test')
-  async test(user: any) {
-    console.log('test called', user);
-  }
-
   @UseGuards(JwtAuthGuard, RolesGuard)
   @AllowRoles(Roles.Super, Roles.Admin, Roles.User)
+  @UseInterceptors(RefreshToken)
   @Get('fetch')
   @Get('/obtain')
   async obtain(@Req() request: Request) {
