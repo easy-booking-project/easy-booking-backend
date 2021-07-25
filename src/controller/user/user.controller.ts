@@ -52,7 +52,8 @@ export class UserController {
   ) {}
 
   //   @second()
-  @UsePipes(refreshTokenInterceptor)
+  @UseInterceptors(refreshTokenInterceptor)
+
   @Post('test')
   async test(user: any) {
     console.log('test called', user);
