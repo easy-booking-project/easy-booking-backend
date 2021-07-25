@@ -8,6 +8,7 @@ import {
   Query,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { User } from '@repository/user/user.schema';
 import { UserRepository } from '@repository/user/user.repository';
@@ -18,6 +19,7 @@ import { JwtAuthGuard } from '../../service/auth/jwt-auth.guard';
 import { Request } from 'express';
 import { AuthService } from '@service/auth/auth.service';
 import { Roles } from '@repository/role/role.schema';
+import { RefreshToken } from '@service/auth/refreshToken.decorator';
 
 @Controller('user')
 export class UserController {
@@ -28,6 +30,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @AllowRoles(Roles.Super, Roles.Admin, Roles.User)
+  @UseInterceptors(RefreshToken)
   @Get('fetch')
   @Get('/obtain')
   async obtain(@Req() request: Request) {
