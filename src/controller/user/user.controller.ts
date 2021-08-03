@@ -14,7 +14,7 @@ import { UserRepository } from '@repository/user/user.repository';
 import { CookieKeys } from '@service/auth/constant';
 import { AllowRoles } from '@service/auth/roles.decorator';
 import { RolesGuard } from '@service/auth/roles.guard';
-import { JwtAuthGuard } from '../../service/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '@service/auth/jwt-auth.guard';
 import { Request } from 'express';
 import { AuthService } from '@service/auth/auth.service';
 import { Roles } from '@repository/role/role.schema';

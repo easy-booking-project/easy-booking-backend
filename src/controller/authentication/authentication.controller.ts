@@ -9,14 +9,14 @@ import {
 import { User } from '@repository/user/user.schema';
 import { AuthService } from '@service/auth/auth.service';
 import { Response } from 'express';
-import { UserRepository } from '../../repository/user/user.repository';
-import { RoleRepository } from '../../repository/role/role.repository';
+import { UserRepository } from '@repository/user/user.repository';
+import { RoleRepository } from '@repository/role/role.repository';
 import { Roles } from '@repository/role/role.schema';
 import {
   CookieKeys,
   HttpResponseError,
   HttpResponseMessage,
-} from '../../service/auth/constant';
+} from '@service/auth/constant';
 
 @Controller('authentication')
 export class AuthenticationController {
