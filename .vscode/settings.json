@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "UNPROCESSABLE",
-        "nestjs"
+        "nestjs",
+        "prebuild"
     ]
 }
