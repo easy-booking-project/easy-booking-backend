@@ -8,7 +8,7 @@ async function bootstrap() {
 
   if (process.env.NODE_ENV != 'production') {
     app.enableCors({
-      origin: 'http://localhost:3000',
+      origin: /http:\/\/localhost:*/,
       credentials: true,
     });
   }
