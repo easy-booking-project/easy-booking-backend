@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { RepositoryBase } from '@repository/repository.base';
-import { Document, Model } from 'mongoose';
+import { Document, Model, Types } from 'mongoose';
 import { Role, Roles } from './role.schema';
 
 @Injectable()
@@ -24,5 +24,11 @@ export class RoleRepository extends RepositoryBase<Role> {
         name,
       });
     }
+  }
+
+  async findRolesByIds(_ids: Types.ObjectId[] | string[]) {
+    const roles = await this.find({ _id: _ids });
+
+    return roles.map((r) => r.name);
   }
 }

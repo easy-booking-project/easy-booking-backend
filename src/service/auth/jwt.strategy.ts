@@ -10,10 +10,10 @@ import {
 import { PassportStrategy } from '@nestjs/passport';
 import { UserRepository } from '@repository/user/user.repository';
 import { AuthService } from './auth.service';
-import { differenceInSeconds } from 'date-fns';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@repository/user/user.schema';
+import { User, UserEntity } from '@repository/user/user.schema';
 import { Document } from 'mongoose';
+import { RoleRepository } from '../../repository/role/role.repository';
 
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy, 'cookie') {
@@ -21,6 +21,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy, 'cookie') {
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
+    private readonly roleRepository: RoleRepository,
   ) {
     super({
       jwtFromRequest: (req: { cookies: { [x: string]: any } }) => {
@@ -40,29 +41,17 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy, 'cookie') {
     this.handleUserTokenNotExist(userFound);
     this.handleUserRefreshTokenStillValid(userFound);
 
-    return await this.regeneratePayload(payload);
-  }
+    const roles = await this.roleRepository.find({ _id: userFound.roleIds });
 
-  private async regeneratePayload(payload) {
-    const refactorPayload: any = {
-      _id: payload._id,
-      roles: payload.roles,
-    };
-
-    const timeDiff = differenceInSeconds(payload.exp * 1000, new Date());
-
-    const access_token_refreshed = timeDiff < 300;
-
-    refactorPayload.access_token_refreshed = access_token_refreshed;
-
-    if (access_token_refreshed) {
-      refactorPayload.access_token =
-        await this.authService.generateJwtAccessToken({
-          _id: payload._id,
-          roles: payload.roles,
-        });
-    }
-    return refactorPayload;
+    return {
+      id: userFound._id,
+      username: userFound.username,
+      nickname: userFound.nickname,
+      firstName: userFound.firstName,
+      middleName: userFound.middleName,
+      lastName: userFound.lastName,
+      roles,
+    } as UserEntity;
   }
 
   private handleUserRefreshTokenStillValid(userFound: User & Document) {
