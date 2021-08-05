@@ -16,9 +16,8 @@ import { UserInfo } from '@service/auth/user.decorator';
 import { RolesGuard } from '@service/auth/roles.guard';
 import { JwtAuthGuard } from '../../service/auth/jwt-auth.guard';
 import { Request } from 'express';
-import { AuthService } from '@service/auth/auth.service';
 import { Roles } from '@repository/role/role.schema';
-import { UserEntity } from '../../repository/user/user.schema';
+import { UserEntity } from '@repository/user/user.schema';
 
 @Controller('user')
 export class UserController {
